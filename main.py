@@ -1,12 +1,11 @@
+import re
 input_the_road = str(input('''Please, input the road witout spaces: 
 o = hole
 . = normal
 '''))
-
-if 'o' not in input_the_road and '.' not in input_the_road:
-    print('Incorrect data')
+if not bool(re.compile(r'[^o.]').search(input_the_road)) == False:
+    print('incorrect road')
     exit()
-
 try:
     X = int(input('Enter a length of car: '))
     S = int(input('Enter a count of skip_hole: '))
@@ -18,21 +17,18 @@ the_road = [elem for elem in input_the_road]
 the_new_road = []
 len_the_road = len(the_road)
 iterator_the_road = iter(the_road)
-count_of_iteration = 0
-def fix_hole():
-    global len_the_road, count_of_iteration
-    count_of_iteration += 1
-    len_the_road -= X  
-    for elem in range(X - 1):
-        try:
-            next(iterator_the_road)
-        except StopIteration:
-            len_the_road = 0
+count_of_iteration = 0 
 
 while len_the_road > 0:
     try:
         if next(iterator_the_road) == 'o':
-            fix_hole()
+            count_of_iteration += 1
+            len_the_road -= X  
+            for elem in range(X - 1):
+                try:
+                    next(iterator_the_road)
+                except StopIteration:
+                    len_the_road = 0
             for elem in range(X):
                 the_new_road.append('.')
             if S != 0:
@@ -55,4 +51,3 @@ while len_the_road > 0:
                 len_the_road = 0   
 print('Number of iterations that will remove the holes is:', count_of_iteration)
 print('The road after fix holes: ', *the_new_road)
-
